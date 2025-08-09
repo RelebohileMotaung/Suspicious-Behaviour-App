@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cash-monitor
+    runtime: docker
+    env: python
+    build:
+      dockerfile: Dockerfile
+    envVars:
+      - key: GOOGLE_API_KEY
+        fromDatabase: false
+      - key: TELEMETRY_WEBHOOK_URL
+        required: false
+    resources:
+      cpu: 1
+      memory: 1GB
+      disk: 1GB

@@ -2,3 +2,11 @@ streamlit==1.28.1
 opencv-python==4.8.1.78
 Pillow==10.0.1
 numpy==1.24.3
+langchain-google-genai==0.0.7
+langchain-core==0.1.0
+python-dotenv==1.0.0
+tiktoken==0.5.1
+google-generativeai==0.3.2
+psutil==5.9.5
+requests==2.31.0
+sqlite3
