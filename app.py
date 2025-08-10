@@ -685,14 +685,7 @@ def main():
                 st.metric("Total Cost", f"${total_cost:.6f}")
     
     with tab2:
-        # Use the robust feedback system with RerunData error fix
-        try:
-            from feedback_rerun_fix import get_feedback_form
-            feedback_form = get_feedback_form()
-            feedback_form()
-        except ImportError as e:
-            st.error(f"Failed to load feedback system: {e}")
-            feedback_system()
+        feedback_system()
     
     with tab3:
         st.header("📊 Analytics")
