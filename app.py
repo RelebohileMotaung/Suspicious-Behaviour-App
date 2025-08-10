@@ -33,11 +33,12 @@ load_dotenv()
 # Set up Gemini AI
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 if not GOOGLE_API_KEY:
-    st.error("Please set GOOGLE_API_KEY in your .env file")
-    st.stop()
-
-os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
-gemini_model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+    # Allow deployment without API key for now
+    logger.warning("GOOGLE_API_KEY not found - AI features will be disabled")
+    gemini_model = None
+else:
+    os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+    gemini_model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 
 # Create folder for saving full-frame images
 FRAME_FOLDER = "full_frames"
@@ -219,6 +220,9 @@ def log_event(event_type, data):
 
 def evaluate_response(image_path, model_response):
     """Evaluate the model response using LLM self-evaluation."""
+    if gemini_model is None:
+        return "DISABLED"
+    
     try:
         prompt = f"""
         You are an LLM evaluator. Given the image and the previous model answer below, output ONLY one word: CORRECT or INCORRECT.
@@ -281,6 +285,9 @@ def update_observation_eval(rowid, eval_result):
 def analyze_image(image_path, timestamp):
     """Analyze image with Gemini and track telemetry."""
     start_time = time.time()
+    
+    if gemini_model is None:
+        return "AI analysis disabled - no API key", {}
     
     try:
         # Check if file exists and is readable
