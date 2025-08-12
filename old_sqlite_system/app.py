@@ -411,10 +411,6 @@ def feedback_system():
     """Human-in-the-loop feedback system with improved error handling"""
     st.header("🔍 Feedback & Correction")
     
-    # Use session state to manage feedback submission
-    if 'feedback_submitted' not in st.session_state:
-        st.session_state.feedback_submitted = False
-    
     try:
         conn = sqlite3.connect(DB_NAME)
         
@@ -463,7 +459,7 @@ def feedback_system():
                     st.write("Review the detection above and provide feedback")
                     submitted = st.form_submit_button("Submit Feedback")
                     
-                    if submitted and not st.session_state.feedback_submitted:
+                    if submitted:
                         try:
                             conn = sqlite3.connect(DB_NAME)
                             c = conn.cursor()
@@ -492,23 +488,14 @@ def feedback_system():
                                 except Exception as e:
                                     logger.error(f"Telemetry logging failed: {e}")
                             
-                            st.session_state.feedback_submitted = True
                             st.success("✅ Feedback submitted successfully!")
-                            
-                            # Use experimental rerun to avoid issues
-                            st.rerun()
+                            st.info("Please refresh the page to see updated results")
                             
                         except Exception as e:
                             st.error(f"❌ Failed to save feedback: {str(e)}")
                             logger.error(f"Feedback save error: {e}")
                         finally:
                             conn.close()
-                
-                # Reset button to allow new feedback
-                if st.session_state.feedback_submitted:
-                    if st.button("Submit Another Feedback"):
-                        st.session_state.feedback_submitted = False
-                        st.rerun()
         else:
             st.info("No detections available for review")
             

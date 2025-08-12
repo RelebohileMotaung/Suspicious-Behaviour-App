@@ -10,7 +10,21 @@ services:
         fromDatabase: false
       - key: TELEMETRY_WEBHOOK_URL
         required: false
+      - key: MONGODB_URI
+        fromDatabase:
+          name: cash-monitor-db
+          property: connectionString
+      - key: MONGODB_DATABASE
+        value: cash_monitor
+      - key: MONGODB_TIMEOUT
+        value: "5000"
     resources:
       cpu: 1
       memory: 1GB
       disk: 1GB
+
+databases:
+  - name: cash-monitor-db
+    databaseName: cash_monitor
+    user: cash_monitor_user
+    plan: starter
